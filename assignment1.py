@@ -226,3 +226,34 @@ def check_shuffled_data(dataset, labels):
 # check_shuffled_data(train_dataset, train_labels)
 # check_shuffled_data(test_dataset, test_labels)
 # check_shuffled_data(valid_dataset, valid_labels)
+
+pickle_file = 'notMNIST.pickle'
+
+try:
+  f = open(pickle_file, 'wb')
+  save = {
+    'train_dataset': train_dataset,
+    'train_labels': train_labels,
+    'valid_dataset': valid_dataset,
+    'valid_labels': valid_labels,
+    'test_dataset': test_dataset,
+    'test_labels': test_labels,
+    }
+  pickle.dump(save, f, pickle.HIGHEST_PROTOCOL)
+  f.close()
+except Exception as e:
+  print('Unable to save data to', pickle_file, ':', e)
+  raise
+
+statinfo = os.stat(pickle_file)
+print('Compressed pickle size:', statinfo.st_size)
+
+def check_overlap(dataset1, dataset2):
+	dataset1.flags.writeable = False
+	dataset2.flags.writeable = False
+	hash1 = set([hash(img1.data) for img1 in dataset1])
+	hash2 = set([hash(img2.data) for img2 in dataset2])
+	overlaps = set.intersection(hash1, hash2)
+	print(len(overlaps))
+
+check_overlap(train_dataset, test_dataset)
