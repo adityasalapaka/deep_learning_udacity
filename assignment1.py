@@ -133,4 +133,17 @@ def show_sample_pickle(image_folder):
 		plt.subplot(2, 4, i+1)
 		plt.imshow(img)
 
-show_sample_pickle(train_folders)
+# show_sample_pickle(train_folders)
+# show_sample_pickle(test_folders)
+
+# Problem 3
+
+def number_of_images(image_folder):
+	for folder in image_folder:
+		pickle_file = ''.join(folder) + '.pickle'
+		file = open(pickle_file, 'rb')
+		dataset = pickle.load(file)
+		print("Length of dataset in ", folder, len(dataset))
+
+# number_of_images(train_folders)
+# number_of_images(test_folders)
