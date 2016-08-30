@@ -248,12 +248,16 @@ except Exception as e:
 statinfo = os.stat(pickle_file)
 print('Compressed pickle size:', statinfo.st_size)
 
+# Problem 5
+
 def check_overlap(dataset1, dataset2):
 	dataset1.flags.writeable = False
 	dataset2.flags.writeable = False
 	hash1 = set([hash(img1.data) for img1 in dataset1])
 	hash2 = set([hash(img2.data) for img2 in dataset2])
 	overlaps = set.intersection(hash1, hash2)
-	print(len(overlaps))
+	return len(overlaps)
 
-check_overlap(train_dataset, test_dataset)
+# print(check_overlap(train_dataset, test_dataset))
+# print(check_overlap(test_dataset, valid_dataset))
+# print(check_overlap(train_dataset, valid_dataset))
