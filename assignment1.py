@@ -215,7 +215,7 @@ valid_dataset, valid_labels = randomize(valid_dataset, valid_labels)
 
 assign_labels = {0 : 'A', 1 : 'B', 2 : 'C', 3 : 'D', 4 : 'E', 5 : 'F', 6 : 'G', 7 : 'H', 8 : 'I', 9 : 'J'}
 
-def check_shuffled_data(dataset, labels):
+def display_dataset(dataset, labels):
 	random_label = random.sample(range(len(labels)), 6)
 	for i, img in enumerate(random_label):
 		plt.subplot(2, 3, i+1)
@@ -223,9 +223,9 @@ def check_shuffled_data(dataset, labels):
 		plt.title(assign_labels[labels[img]])
 		plt.imshow(dataset[img])
 
-# check_shuffled_data(train_dataset, train_labels)
-# check_shuffled_data(test_dataset, test_labels)
-# check_shuffled_data(valid_dataset, valid_labels)
+# display_dataset(train_dataset, train_labels)
+# display_dataset(test_dataset, test_labels)
+# display_dataset(valid_dataset, valid_labels)
 
 pickle_file = 'notMNIST.pickle'
 
@@ -259,5 +259,45 @@ def check_overlap(dataset1, dataset2):
 	return len(overlaps)
 
 # print(check_overlap(train_dataset, test_dataset))
-# print(check_overlap(test_dataset, valid_dataset))
 # print(check_overlap(train_dataset, valid_dataset))
+
+# Problem 6
+
+def classifier(sample_size):
+
+	X_train = np.reshape(train_dataset[:sample_size], (sample_size,train_dataset.shape[1]*train_dataset.shape[2]))
+	y_train = train_labels[:sample_size]
+
+	logistic = LogisticRegression(penalty = 'l2', solver = 'lbfgs', max_iter = 1000, multi_class = 'multinomial', verbose = 1)
+
+	print(logistic.fit(X_train, y_train))
+
+	X_test = np.reshape(test_dataset[:sample_size], (sample_size, test_dataset.shape[1]*test_dataset.shape[2]))
+	y_test = test_labels[:sample_size]
+
+	print("Accuracy Score", logistic.score(X_test, y_test))
+
+	predictions = logistic.predict(X_test)
+
+	display_dataset(test_dataset, predictions)
+
+# classifier(50)
+# classifier(100)
+# classifier(1000)
+# classifier(5000)
+
+X_train = np.reshape(train_dataset, (train_dataset.shape[0], train_dataset.shape[1]*train_dataset.shape[2]))
+y_train = train_labels
+
+logistic = LogisticRegression(penalty = 'l2', solver = 'sag', max_iter = 1000, verbose = 1)
+
+print(logistic.fit(X_train, y_train))
+
+X_test = np.reshape(test_dataset, (test_dataset.shape[0], test_dataset.shape[1]*test_dataset.shape[2]))
+y_test = test_labels
+
+print("Accuracy Score =", logistic.score(X_test, y_test))
+
+predictions = logistic.predict(X_test)
+
+display_dataset(test_dataset, predictions)
